@@ -1,7 +1,7 @@
 import React, { createContext, useState, useEffect, ReactNode } from "react"
 
 interface User {
-  _id: string
+  _id?: string
   firstName: string
   lastName: string
   phoneNumber: string
@@ -14,6 +14,7 @@ interface AuthContextState {
   setUser: React.Dispatch<React.SetStateAction<User | null>>
   login: (newUser: User) => void
   logout: () => void
+  updateUser: (updatedUser: User) => void
 }
 
 const AuthContext = createContext<AuthContextState>({
@@ -22,6 +23,7 @@ const AuthContext = createContext<AuthContextState>({
   setUser: () => {},
   login: () => {},
   logout: () => {},
+  updateUser: () => {},
 })
 
 const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
@@ -51,8 +53,15 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     setIsAuthenticated(false)
   }
 
+   const updateUser = async (updatedUser: User) => {
+    //  TOTO:Update User info
+     console.log(
+       "Update user logic goes here. Update user state and handle errors.",
+     )
+   }
+
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated, login, logout, setUser }}>
+    <AuthContext.Provider value={{ user, isAuthenticated, login, logout, setUser, updateUser }}>
       {children}
     </AuthContext.Provider>
   )

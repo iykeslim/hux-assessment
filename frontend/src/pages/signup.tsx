@@ -33,7 +33,7 @@ const SignupPage: React.FC = () => {
   }
 
  return (
-   <div className="container mx-auto px-4 py-8">
+   <div className="container grid place-items-center mx-auto min-h-screen px-4 py-8">
      <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
        <div className="hidden lg:grid lg:place-items-center h-full">
          <h1 className="text-5xl font-bold text-center">Hux Assessment</h1>
@@ -78,7 +78,7 @@ const SignupPage: React.FC = () => {
                Phone Number
              </label>
              <input
-               type="tel" 
+               type="tel"
                id="phoneNumber"
                name="phoneNumber"
                className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 rounded-md w-full sm:text-sm px-3 py-2 border border-gray-300"
