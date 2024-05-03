@@ -3,6 +3,10 @@ import cors from "cors"
 import mongoose from "mongoose"
 import dotenv from "dotenv"
 
+// Routes imports
+import userRoutes from "./routes/user"
+import contactRouter from "./routes/contact.router" 
+
 dotenv.config() 
 
 const app = express()
@@ -35,6 +39,10 @@ connectDB()
 app.get("/", (req: express.Request, res: express.Response) => {
   res.send("Hello from the backend!")
 })
+
+app.use("/api/users", userRoutes)
+app.use("/api/contacts", contactRouter)
+
 
 // Start the server
 const port = process.env.PORT || 5000
