@@ -1,6 +1,6 @@
 import express from "express"
 import User from "../models/userModel"
-import * as bcrypt from "bcryptjs"
+import bcrypt from "bcryptjs" 
 import { generateToken } from "../auth"
 import { sendResponse } from "../utils"
 
@@ -10,14 +10,15 @@ router.post("/", async (req, res) => {
   try {
     const { firstName, lastName, email, phoneNumber, password } = req.body
 
-    const hashedPassword = await bcrypt.hash(password, 10)
+    const trimmedEmail = email.trim()
+    const trimmedPassword = password.trim()
 
     const newUser = new User({
       firstName,
       lastName,
-      email,
+      email: trimmedEmail,
       phoneNumber,
-      password: hashedPassword,
+      password: trimmedPassword, 
     })
 
     const savedUser = await newUser.save()
@@ -28,10 +29,10 @@ router.post("/", async (req, res) => {
     // Structuring JSON response
     sendResponse(res, true, "User registered successfully", {
       token,
-      user: { firstName, lastName, email, phoneNumber },
+      user: { firstName, lastName, email: trimmedEmail, phoneNumber },
     })
   } catch (error) {
-    console.error(error)
+    console.error("Error registering user:", error)
     sendResponse(res, false, "Internal server error")
   }
 })
@@ -40,39 +41,82 @@ router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body
 
-    // Data validation (using joi)
+    const trimmedEmail = email.trim()
+    const trimmedPassword = password.trim()
 
-    console.log("Received login request:", { email, password }) 
+    console.log({ trimmedPassword })
 
     // Find user by email
-    const user = await User.findOne({ email })
+    const user = await User.findOne({ email: trimmedEmail })
 
     if (!user) {
-      console.log("User not found with email:", email) 
+      console.log("User not found with email:", trimmedEmail)
       return sendResponse(res, false, "Invalid email or password")
     }
 
-    console.log("Found user:", user) 
-
-    console.log("Hashed password from DB:", user.password) 
-
-    const isMatch = await bcrypt.compare(password, user.password)
-
-    console.log("Password comparison result:", isMatch)
+    const isMatch = bcrypt.compareSync(trimmedPassword, user.password) 
 
     if (!isMatch) {
-      console.log("Password mismatch for user:", user.email) 
+      console.log("Password mismatch for user:", user.email)
       return sendResponse(res, false, "Invalid email or password")
     }
 
     // Generate JWT token with user ID
     const token = generateToken(user._id.toString())
 
-    sendResponse(res, true, "Login successful", { token })
+    // Send complete user object (excluding password)
+    const userToReturn = {
+      _id: user._id, 
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      phoneNumber: user.phoneNumber,
+    }
+
+    sendResponse(res, true, "Login successful", { token, user: userToReturn })
   } catch (error) {
-    console.error(error)
+    console.error("Error logging in:", error)
     sendResponse(res, false, "Internal server error")
   }
 })
+
+// Get User
+router.get("/:userId", async (req, res) => {
+  try {
+    const userId = req.params.userId
+
+    const user = await User.findById(userId)
+
+    if (!user) {
+      return sendResponse(res, false, "User not found")
+    }
+
+    
+    const userToReturn = {
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      phoneNumber: user.phoneNumber,
+    }
+
+    sendResponse(res, true, "User details retrieved", userToReturn)
+  } catch (error) {
+    console.error("Error retrieving user:", error)
+    sendResponse(res, false, "Internal server error")
+  }
+})
+
+// LOgout
+router.post("/logout", async (req, res) => {
+  try {
+   res.send({ message: "Logout successful" }) 
+  } catch (error) {
+    console.error("Error logging out:", error)
+    sendResponse(res, false, "Internal server error")
+  }
+})
+
+
+
 
 export default router

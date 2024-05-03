@@ -3,6 +3,8 @@ import axios from "axios"
 import { useRouter } from "next/router"
 import { AuthContext } from "../context/AuthContext"
 
+import Cookies from "js-cookie";
+
 const LoginPage: React.FC = () => {
   const { login } = useContext(AuthContext)
   const router = useRouter()
@@ -22,7 +24,17 @@ const LoginPage: React.FC = () => {
     try {
       const response = await axios.post("/api/login", formData)
       login(response.data)
-      router.push("/user-details")
+
+      const { success, message, data } = response.data;
+
+      alert(success);
+
+      if (success) {
+        Cookies.set('Authorization', `Bearer ${data.token}`);
+
+      } else {
+        alert(message);
+      }
     } catch (error) {
       console.error(error)
       setErrorMessage("Login failed. Please check your email and password.")
@@ -81,7 +93,7 @@ const LoginPage: React.FC = () => {
                type="submit"
                className="inline-flex items-center px-4 py-2 bg-indigo-600 font-medium text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
              >
-               Login
+               Loginxxx
              </button>
            </form>
            <div className="text-center mt-4">

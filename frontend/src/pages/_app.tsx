@@ -1,6 +1,23 @@
-import "@/styles/globals.css";
-import type { AppProps } from "next/app";
+import React from "react"
+import { AppProps } from "next/app"
+import { RecoilRoot } from "recoil";
 
-export default function App({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />;
+
+import { PrimeReactProvider } from "primereact/api"
+        
+
+import "@/styles/globals.css"
+import "primeicons/primeicons.css"
+import "primereact/resources/themes/saga-blue/theme.css"
+
+const App: React.FC<AppProps> = ({ Component, pageProps }) => {
+  return (
+    <RecoilRoot>
+      <PrimeReactProvider>
+        <Component {...pageProps} />
+      </PrimeReactProvider>
+    </RecoilRoot>
+  )
 }
+
+export default App

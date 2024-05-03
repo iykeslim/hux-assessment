@@ -43,8 +43,8 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   
   const login = (newUser: User) => {
     setUser(newUser)
-    localStorage.setItem("user", JSON.stringify(newUser))
     setIsAuthenticated(true)
+    localStorage.setItem("user", JSON.stringify(newUser))
   }
 
   const logout = () => {

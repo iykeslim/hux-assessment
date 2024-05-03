@@ -5,13 +5,18 @@ import { Inter } from "next/font/google";
 import React, { useState, useContext } from "react"
 import axios from "axios"
 import { useRouter } from "next/router"
-import { AuthContext } from "../context/AuthContext"
+
+// RECOIL
+import { useRecoilState } from "recoil";
+import { userAtom } from '@/store';
+
+import Cookies from "js-cookie"
 
 const inter = Inter({ subsets: ["latin"] });
 
 const LoginPage: React.FC = () => {
-  const { login } = useContext(AuthContext)
   const router = useRouter()
+  const [_, setUserPayload] = useRecoilState(userAtom)
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -26,12 +31,37 @@ const LoginPage: React.FC = () => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     try {
-      const response = await axios.post("/api/login", formData)
-      login(response.data)
-      router.push("/user-details")
-    } catch (error) {
+      const response = await axios.post(
+        "http://localhost:5000/api/users/login",
+        formData,
+      )
+
+      const { success, message, data } = response.data
+
+      console.log({ response });
+
+      if (success) {
+        Cookies.set("Authorization", `Bearer ${data.token}`)
+
+        console.group('USER')
+        console.log(data.user)
+
+        setUserPayload({
+          ...data.user,
+          isAuthenticated: true
+        });
+
+        router.push("/user-profile").then(() => {
+          alert(message);
+        });
+      } else {
+        alert(message)
+      }
+    } catch (error: any) {
       console.error(error)
-      setErrorMessage("Login failed. Please check your email and password.")
+      const errorMsg = error.response.data.message;
+      const message = errorMsg || 'Error encountered. Please try again!';
+      setErrorMessage(message)
     }
   }
 

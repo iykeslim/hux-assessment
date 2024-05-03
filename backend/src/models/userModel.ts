@@ -12,8 +12,8 @@ const userSchema = new mongoose.Schema({
 userSchema.pre("save", async function (next) {
   if (this.isModified("password")) {
     try {
-      const salt = await bcrypt.genSalt(10)
-      const hashedPassword = await bcrypt.hash(this.password, salt)
+      // const salt = await bcrypt.genSalt(10)
+      const hashedPassword = bcrypt.hashSync(this.password, 10)
       this.password = hashedPassword
     } catch (error) {
       console.error("An error occurred:", error)

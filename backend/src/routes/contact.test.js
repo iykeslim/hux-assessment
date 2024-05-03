@@ -1,6 +1,6 @@
 const request = require("supertest");
-const app = require("../app"); // Replace with path to your app.js file
-const Contact = require("../models/contact.model"); // Replace with path to your contact model
+const app = require("../app"); 
+const Contact = require("../models/contact.model"); 
 
 describe("Contact API Endpoints", () => {
   // Helper function to create a new contact in the database

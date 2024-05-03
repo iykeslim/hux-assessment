@@ -23,7 +23,10 @@ const SignupPage: React.FC = () => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     try {
-      const response = await axios.post("/api/signup", formData) 
+      const response = await axios.post(
+        "http://localhost:5000/api/users",
+        formData,
+      ) 
       login(response.data) 
       router.push("/user-details") 
     } catch (error) {
