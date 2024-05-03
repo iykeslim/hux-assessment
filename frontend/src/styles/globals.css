@@ -17,8 +17,8 @@
 }
 
 body {
-  background-color: #1d2939; /* Dark blue background */
-  color: #fff; /* White text color */
+  background-color: rgb(28, 28, 69); /* Dark blue background */
+  color: rgb(107, 104, 104);
   font-family: sans-serif;
 }
 

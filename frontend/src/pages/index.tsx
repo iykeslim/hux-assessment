@@ -37,7 +37,7 @@ const LoginPage: React.FC = () => {
 
   return (
     <div className="container grid place-items-center mx-auto min-h-screen px-4 py-8">
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 ">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 color">
         <div className="hidden lg:grid place-items-center h-full">
           <h1 className="text-5xl font-bold text-center">Hux Assessment</h1>
         </div>
