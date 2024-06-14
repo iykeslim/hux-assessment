@@ -17,14 +17,8 @@ Copy code
 npm install
 Configuration
 Server Configuration 
-The backend server can be started using:
-bash
-Copy code
-npm start
-The frontend server can be started using:
-bash
-Copy code
-npm run dev
+The backend server can be started using:npm start
+The frontend server can be started using:npm run dev
 Environment Variables (.env file)
 Create a .env file in the root directory of the project with the following content:
 
